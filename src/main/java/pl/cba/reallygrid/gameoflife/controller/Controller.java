@@ -6,6 +6,8 @@ import pl.cba.reallygrid.gameoflife.gui.GamePanel;
 import pl.cba.reallygrid.gameoflife.gui.SettingsPanel;
 import pl.cba.reallygrid.gameoflife.model.Model;
 
+import java.util.Timer;
+
 /**
  * Created by krzysztof on 2016-09-29.
  */
@@ -15,8 +17,11 @@ public class Controller {
 		this.settingsPanel = settingsPanel;
 		this.model = model;
 
+		this.model.addObserver(this.gamePanel);
+
 		settingsPanel.addGenerateBtnListener(e -> {
 			model.generate(settingsPanel.getFactorValue());
+			model.notifyObserver();
 			LOGGER.info("Wygenerowano z gęstością " + settingsPanel.getFactorValue() + '%');
 		});
 	}

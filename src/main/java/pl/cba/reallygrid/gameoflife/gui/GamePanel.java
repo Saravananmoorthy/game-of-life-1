@@ -2,17 +2,19 @@ package pl.cba.reallygrid.gameoflife.gui;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.cba.reallygrid.gameoflife.util.Observer;
 
 import javax.swing.JComponent;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
+import static java.awt.Color.BLACK;
 import static java.awt.Color.LIGHT_GRAY;
 
 /**
  * Created by krzysztof on 2016-09-29.
  */
-public class GamePanel extends JComponent {
+public class GamePanel extends JComponent implements Observer {
 	public GamePanel(int rows, int columns) {
 		this.rows = rows;
 		this.columns = columns;
@@ -20,9 +22,31 @@ public class GamePanel extends JComponent {
 	}
 
 	@Override
+	public void update(Object o) {
+		if(o != null) {
+			cells = (boolean[])o;
+		}
+		repaint();
+	}
+
+	@Override
 	protected void paintComponent(Graphics g) {
 		g.clearRect(0, 0, getWidth(), getHeight());
+		drawCells(g);
 		drawGrid(g);
+	}
+
+	private void drawCells(Graphics g) {
+		g.setColor(BLACK);
+		if(cells != null) {
+			for(int row = 1; row < rows - 1; row++) {
+				for(int column = 1; column < columns - 1; column++) {
+					if(cells[row * columns + column]) {
+						g.fillRect(column * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+					}
+				}
+			}
+		}
 	}
 
 	private void drawGrid(Graphics g) {
@@ -38,6 +62,8 @@ public class GamePanel extends JComponent {
 	private static final int CELL_SIZE = 6;
 	private int rows;
 	private int columns;
+
+	private boolean[] cells;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GamePanel.class);
 }
