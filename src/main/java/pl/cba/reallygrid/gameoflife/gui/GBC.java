@@ -25,6 +25,12 @@ public class GBC extends GridBagConstraints {
 		return this;
 	}
 
+	public GBC fill(int fill) {
+		this.fill = fill;
+
+		return this;
+	}
+
 	public GBC insets(int top, int left, int bottom, int right) {
 		insets = new Insets(top, left, bottom, right);
 

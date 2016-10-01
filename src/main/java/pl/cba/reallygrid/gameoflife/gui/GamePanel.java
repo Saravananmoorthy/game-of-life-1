@@ -2,6 +2,7 @@ package pl.cba.reallygrid.gameoflife.gui;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.cba.reallygrid.gameoflife.model.ModelApi;
 import pl.cba.reallygrid.gameoflife.util.Observer;
 
 import javax.swing.JComponent;
@@ -22,9 +23,9 @@ public class GamePanel extends JComponent implements Observer {
 	}
 
 	@Override
-	public void update(Object o) {
-		if(o != null) {
-			cells = (boolean[])o;
+	public void update(ModelApi model) {
+		if(model != null) {
+			cells = model.getCells();
 		}
 		repaint();
 	}

@@ -1,15 +1,20 @@
 package pl.cba.reallygrid.gameoflife.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.cba.reallygrid.gameoflife.util.Observable;
 import pl.cba.reallygrid.gameoflife.util.Observer;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
+import java.util.TimerTask;
 
 /**
  * Created by krzysztof on 2016-09-29.
  */
-public class Model implements Observable {
+public class Model extends TimerTask implements ModelApi, Observable {
 	public void generate(int factor) {
 		for(int i = 0; i < cells.length; i++) {
 			cells[i] = random.nextInt(101) <= factor;
@@ -25,18 +30,36 @@ public class Model implements Observable {
 	}
 
 	@Override
+	public boolean[] getCells() {
+		return cells;
+	}
+
+	@Override
+	public int getAlive() {
+		return alive;
+	}
+
+	@Override
 	public void addObserver(Observer o) {
-		this.observer = o;
+		observers.add(o);
 	}
 
 	@Override
 	public void notifyObserver() {
-		observer.update(cells);
+		for(Observer observer : observers) {
+			observer.update(this);
+		}
+	}
+
+	@Override
+	public void run() {
+		next();
 	}
 
 	private void next() {
+		int aliveCells = 0;
 		for(int row = 1; row < DEFAULT_ROWS - 1; row++) {
-			for(int column = 1; column < DEFAULT_COLUMNS; column++) {
+			for(int column = 1; column < DEFAULT_COLUMNS - 1; column++) {
 				int aliveCount = aliveCount(row, column);
 				boolean aliveCell = cells[row * DEFAULT_COLUMNS + column];
 				if(aliveCell) {
@@ -45,9 +68,13 @@ public class Model implements Observable {
 				else {
 					activeCells[row * DEFAULT_COLUMNS + column] = aliveCount == 3;
 				}
+				if(activeCells[row * DEFAULT_COLUMNS + column]) {
+					aliveCells++;
+				}
 			}
 		}
 
+		alive = aliveCells;
 		cells = activeCells;
 		notifyObserver();
 	}
@@ -73,9 +100,11 @@ public class Model implements Observable {
 
 	private static final int DEFAULT_COLUMNS = 400;
 	private static final int DEFAULT_ROWS = 300;
+	private int alive;
 	private boolean[] cells = new boolean[DEFAULT_ROWS * DEFAULT_COLUMNS];
 	private boolean[] activeCells = new boolean[DEFAULT_ROWS * DEFAULT_COLUMNS];
-	private Observer observer;
+	private List<Observer> observers = new ArrayList<>();
 
 	private Random random = new Random(new Date().getTime());
+	private static final Logger LOGGER = LoggerFactory.getLogger(Model.class);
 }

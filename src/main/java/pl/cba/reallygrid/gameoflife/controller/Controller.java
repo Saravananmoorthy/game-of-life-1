@@ -18,17 +18,22 @@ public class Controller {
 		this.model = model;
 
 		this.model.addObserver(this.gamePanel);
+		this.model.addObserver(this.settingsPanel);
 
 		settingsPanel.addGenerateBtnListener(e -> {
 			model.generate(settingsPanel.getFactorValue());
 			model.notifyObserver();
 			LOGGER.info("Wygenerowano z gęstością " + settingsPanel.getFactorValue() + '%');
 		});
+
+		timer = new Timer("Model timer");
+		settingsPanel.addStartBtnListener(e -> timer.schedule(model, 0, 16));
 	}
 
 	private GamePanel gamePanel;
 	private SettingsPanel settingsPanel;
 	private Model model;
+	private Timer timer;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
 }
