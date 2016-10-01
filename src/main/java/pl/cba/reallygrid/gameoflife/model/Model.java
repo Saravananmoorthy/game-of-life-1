@@ -56,6 +56,19 @@ public class Model extends TimerTask implements ModelApi, Observable {
 		next();
 	}
 
+	public void click(int row, int column) {
+		LOGGER.info("column:" + column + ", row:" + row);
+		if(cells[row * DEFAULT_COLUMNS + column]) {
+			cells[row * DEFAULT_COLUMNS + column] = false;
+			alive--;
+		}
+		else {
+			cells[row * DEFAULT_COLUMNS + column] = true;
+			alive++;
+		}
+		notifyObserver();
+	}
+
 	private void next() {
 		int aliveCells = 0;
 		for(int row = 1; row < DEFAULT_ROWS - 1; row++) {
@@ -75,27 +88,31 @@ public class Model extends TimerTask implements ModelApi, Observable {
 		}
 
 		alive = aliveCells;
-		cells = activeCells;
+		switchArrays();
 		notifyObserver();
 	}
 
+	private void switchArrays() {
+		boolean[] tmp = cells;
+		cells = activeCells;
+		activeCells = tmp;
+	}
+
 	private int aliveCount(int r, int c) {
-		int alive = 0;
+		int aliveNeighborCell = 0;
 		for(int i = -1; i <= 1; i++) {
 			if(cells[(r - 1) * DEFAULT_COLUMNS + c + i]) {
-				alive++;
+				aliveNeighborCell++;
 			}
 			if(cells[(r + 1) * DEFAULT_COLUMNS + c + i]) {
-				alive++;
+				aliveNeighborCell++;
 			}
-		}
-		for(int i = -1; i <= 1; i += 2) {
-			if(cells[r * DEFAULT_COLUMNS + c + i]) {
-				alive++;
+			if(i != 0 && cells[r * DEFAULT_COLUMNS + c + i]) {
+				aliveNeighborCell++;
 			}
 		}
 
-		return alive;
+		return aliveNeighborCell;
 	}
 
 	private static final int DEFAULT_COLUMNS = 400;

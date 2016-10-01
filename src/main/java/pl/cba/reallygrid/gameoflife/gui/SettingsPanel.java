@@ -27,12 +27,14 @@ public class SettingsPanel extends JPanel implements Observer {
 		add(factorSpi, new GBC(1, 0).insets(0, 5, 5, 0).anchor(EAST));
 		generateBtn = new JButton("Generate life");
 		add(generateBtn, new GBC(0, 1, 2, 1).insets(0, 0, 5, 0));
-		startBtn = new JButton("Start");
+		startBtn = new JButton("Start");  //todo może JToggleButton zamiast JButton? I wtedy bez stopBtn
 		add(startBtn, new GBC(0, 2, 2, 1).fill(HORIZONTAL).insets(0, 0, 5, 0));
+		stopBtn = new JButton("Stop");
+		add(stopBtn, new GBC(0, 3, 2, 1).fill(HORIZONTAL).insets(0, 0, 5, 0));
 
-		add(new JLabel("Alive:"), new GBC(0, 3));
+		add(new JLabel("Alive:"), new GBC(0, 4));
 		aliveLbl = new JLabel("0");
-		add(aliveLbl, new GBC(1, 3).anchor(EAST));
+		add(aliveLbl, new GBC(1, 4).anchor(EAST));
 	}
 
 	public void addGenerateBtnListener(ActionListener listener) {
@@ -41,6 +43,10 @@ public class SettingsPanel extends JPanel implements Observer {
 
 	public void addStartBtnListener(ActionListener listener) {
 		startBtn.addActionListener(listener);
+	}
+
+	public void addStopBtnListener(ActionListener listener) {
+		stopBtn.addActionListener(listener);
 	}
 
 	public int getFactorValue() {
@@ -56,5 +62,6 @@ public class SettingsPanel extends JPanel implements Observer {
 	private JSpinner factorSpi;
 	private JButton generateBtn;
 	private AbstractButton startBtn;
+	private JButton stopBtn;
 	private JLabel aliveLbl;
 }

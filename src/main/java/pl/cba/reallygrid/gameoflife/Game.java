@@ -59,7 +59,9 @@ public class Game extends JFrame {
 	}
 
 	private void postConstruct() {
-		new Controller(gamePanel, settingsPanel, new Model());
+		Controller controller = new Controller(gamePanel, settingsPanel, new Model());
+		controller.addObservers();
+		controller.addListeners();
 	}
 
 	private Game() throws HeadlessException {

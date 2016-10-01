@@ -30,6 +30,10 @@ public class GamePanel extends JComponent implements Observer {
 		repaint();
 	}
 
+	public static int getCellSize() {
+		return CELL_SIZE;
+	}
+
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.clearRect(0, 0, getWidth(), getHeight());
