@@ -19,7 +19,7 @@ public class GamePanel extends JComponent implements Observer {
 	public GamePanel(int rows, int columns) {
 		this.rows = rows;
 		this.columns = columns;
-		setPreferredSize(new Dimension(columns * CELL_SIZE + 1, rows * CELL_SIZE + 1));
+		setPreferredSize(new Dimension(columns * currentCellSize + 1, rows * currentCellSize + 1));
 	}
 
 	@Override
@@ -30,8 +30,15 @@ public class GamePanel extends JComponent implements Observer {
 		repaint();
 	}
 
-	public static int getCellSize() {
-		return CELL_SIZE;
+	public int getCellSize() {
+		return currentCellSize;
+	}
+
+	public void changeGridSize(int size) {
+		currentCellSize = size;
+		getPreferredSize().setSize(columns * size + 1, rows * size + 1);
+		repaint();
+		LOGGER.info("Now cell size is " + size);
 	}
 
 	@Override
@@ -47,7 +54,7 @@ public class GamePanel extends JComponent implements Observer {
 			for(int row = 1; row < rows - 1; row++) {
 				for(int column = 1; column < columns - 1; column++) {
 					if(cells[row * columns + column]) {
-						g.fillRect(column * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+						g.fillRect(column * currentCellSize, row * currentCellSize, currentCellSize, currentCellSize);
 					}
 				}
 			}
@@ -57,14 +64,15 @@ public class GamePanel extends JComponent implements Observer {
 	private void drawGrid(Graphics g) {
 		g.setColor(LIGHT_GRAY);
 		for(int r = 0; r <= rows; r++) {
-			g.drawLine(0, r * CELL_SIZE, columns * CELL_SIZE, r * CELL_SIZE);
+			g.drawLine(0, r * currentCellSize, columns * currentCellSize, r * currentCellSize);
 		}
 		for(int c = 0; c <= columns; c++) {
-			g.drawLine(c * CELL_SIZE, 0, c * CELL_SIZE, rows * CELL_SIZE);
+			g.drawLine(c * currentCellSize, 0, c * currentCellSize, rows * currentCellSize);
 		}
 	}
 
-	private static final int CELL_SIZE = 6;
+	static final int CELL_SIZE = 6;
+	private int currentCellSize = CELL_SIZE;
 	private int rows;
 	private int columns;
 

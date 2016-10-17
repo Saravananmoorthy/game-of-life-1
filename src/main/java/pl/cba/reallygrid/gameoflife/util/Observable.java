@@ -5,5 +5,5 @@ package pl.cba.reallygrid.gameoflife.util;
  */
 public interface Observable {
 	void addObserver(Observer o);
-	void notifyObserver();
+	void notifyObservers();
 }

@@ -6,6 +6,7 @@ import pl.cba.reallygrid.gameoflife.gui.GamePanel;
 import pl.cba.reallygrid.gameoflife.gui.SettingsPanel;
 import pl.cba.reallygrid.gameoflife.model.Model;
 
+import javax.swing.JSlider;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Timer;
@@ -29,7 +30,7 @@ public class Controller {
 		gamePanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int cellSize = GamePanel.getCellSize();
+				int cellSize = gamePanel.getCellSize();
 				int row = e.getY() / cellSize;
 				int column = e.getX() / cellSize;
 				model.click(row, column);
@@ -39,13 +40,17 @@ public class Controller {
 
 		settingsPanel.addGenerateBtnListener(e -> {
 			model.generate(settingsPanel.getFactorValue());
-			model.notifyObserver();
+			model.notifyObservers();
 			LOGGER.info("Wygenerowano z gęstością " + settingsPanel.getFactorValue() + '%');
 		});
 
-		settingsPanel.addStartBtnListener(e -> timer.scheduleAtFixedRate(model, 0, 200));
+		settingsPanel.addClearBtnListener(e -> model.clearBoard());
+
+		settingsPanel.addStartBtnListener(e -> timer.scheduleAtFixedRate(model, 0, 70));
 
 		settingsPanel.addStopBtnListener(e -> timer.cancel());
+
+		settingsPanel.addSizeSldListener(e -> gamePanel.changeGridSize(((JSlider)e.getSource()).getValue()));
 	}
 
 	private GamePanel gamePanel;

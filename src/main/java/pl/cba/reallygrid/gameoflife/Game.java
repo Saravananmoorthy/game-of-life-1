@@ -14,6 +14,8 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import static java.awt.BorderLayout.EAST;
 import static java.awt.BorderLayout.NORTH;
@@ -27,7 +29,7 @@ public class Game extends JFrame {
 		SwingUtilities.invokeLater(() -> {
 			game.createwindow();
 			game.setVisible(true);
-			game.postConstruct();
+			game.executor.execute(game::postConstruct);
 		});
 	}
 
@@ -69,6 +71,7 @@ public class Game extends JFrame {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 
+	private Executor executor = Executors.newSingleThreadExecutor();
 	private GamePanel gamePanel;
 	private SettingsPanel settingsPanel;
 }

@@ -45,7 +45,7 @@ public class Model extends TimerTask implements ModelApi, Observable {
 	}
 
 	@Override
-	public void notifyObserver() {
+	public void notifyObservers() {
 		for(Observer observer : observers) {
 			observer.update(this);
 		}
@@ -66,7 +66,15 @@ public class Model extends TimerTask implements ModelApi, Observable {
 			cells[row * DEFAULT_COLUMNS + column] = true;
 			alive++;
 		}
-		notifyObserver();
+		notifyObservers();
+	}
+
+	public void clearBoard() {
+		for(int i = 0; i < cells.length; i++) {
+			cells[i] = false;
+		}
+		alive = 0;
+		notifyObservers();
 	}
 
 	private void next() {
@@ -89,7 +97,7 @@ public class Model extends TimerTask implements ModelApi, Observable {
 
 		alive = aliveCells;
 		switchArrays();
-		notifyObserver();
+		notifyObservers();
 	}
 
 	private void switchArrays() {
